@@ -1,4 +1,2 @@
-# Starlink
-
-## This repository contains
+# This repository contains
 - UDP file transfer for Client/Server application
