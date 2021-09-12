@@ -14,7 +14,7 @@ RequestorEmail = "saadlacas@gmail.com"
 emailaddr = web.find_element_by_xpath('/html/body/div/form/table/tbody/tr[2]/th/div[2]/input')
 emailaddr.send_keys(RequestorEmail)
 
-NoradCatalaogueNumbers = "47414\n47142"
+NoradCatalaogueNumbers = "47414\n47142"  # I have added 2 NORAD catalogue numbers for the sake of testing. This is where I will enter all of the 1648 satellite's NORAD catalogue numbers
 NoradCatno = web.find_element_by_xpath('/html/body/div/form/table/tbody/tr[5]/td[1]/textarea')
 NoradCatno.send_keys(NoradCatalaogueNumbers)
 
