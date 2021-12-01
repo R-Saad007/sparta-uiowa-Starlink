@@ -110,8 +110,19 @@ def file_parser():
 genuine_packet_loss = 0
 # Initializing a boolean variable to keep track of genuine packet losses
 check = True
-# Checking whether a satellite is within a distance x from the antenna where x is the variable to be changed
-distance_from_antenna = 300
+# Changing antenna location according to a x meter shift in all 4 directions (N,S,E,W)
+antenna_shift_distance  = 500000
+# Radius of the earth
+radius_earth = 6378.137
+# 1 meter in degree
+m = (1 / ((2 * pi / 360) * radius_earth)) / 1000
+North = 40.43742 + (antenna_shift_distance * m)
+South = 40.43742 - (antenna_shift_distance * m)
+East = -86.90778 + (antenna_shift_distance * m) / cos(-86.90778 * (pi / 180))
+West = -86.90778 - (antenna_shift_distance * m) / cos(-86.90778 * (pi / 180))
+# Checking whether a satellite is within a distance x from the antenna where distx is the variable to be changed
+distx = input("Enter the distance for satellite tracking: ")
+distance_from_antenna = int(distx)
 # Calling the parser function from the ping_parser file
 data_list = file_parser()
 for x in range(len(data_list)):
@@ -180,6 +191,43 @@ print("Execution Time: " + "{:.4f}".format((time.time() - start_time)) + "second
 # for x in range(len(satellite_name_list)):
 #     print("Satellite:",satellite_name_list[x])
 #     print("Distance from antenna:",distance_list[x],"km")
+
+
+# 500 km North Output:
+'''
+Number of satellites at a distance of 300km from the antenna: 2
+Number of genuine packet losses: 121
+Percentage disconnections/packet losses related to absense of satellites: 98.3739837398374
+'''
+# 500 km South Output:
+'''
+Number of satellites at a distance of 300km from the antenna: 1
+Number of genuine packet losses: 262
+Percentage disconnections/packet losses related to absense of satellites: 99.61977186311786
+'''
+# 500 km East Output:
+'''
+Number of satellites at a distance of 300km from the antenna: 2
+Number of genuine packet losses: 313
+Percentage disconnections/packet losses related to absense of satellites: 99.36507936507937
+'''
+# 500 km West Output:
+'''
+Number of satellites at a distance of 300km from the antenna: 3
+Number of genuine packet losses: 512
+Percentage disconnections/packet losses related to absense of satellites: 99.41747572815534
+'''
+# Normal Output:
+'''
+Number of satellites at a distance of 300km from the antenna: 2
+Number of genuine packet losses: 319
+Percentage disconnections/packet losses related to absense of satellites: 99.37694704049844
+'''
+# The time for which satellites aren't available in a 24 hour format
+'''
+319 packet losses in 1 week so 45 packet losses in 1 day.
+Each packet loss/disconnection time period averages on 25 seconds/loss, hence total time for which satellites are not available in a 24 hour format = 1125 seconds or 18.75 minutes
+'''
 
 
 # Assumptions:
