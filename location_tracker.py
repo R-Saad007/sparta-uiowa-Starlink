@@ -164,6 +164,7 @@ for x in range(len(data_list)):
             decimal_latitude_val = parser(latitude_val)
             decimal_longitude_val = parser(longitude_val)
             # Distance of the satellite from the antenna using Haversine formula
+            # The variables North, South, East, and West are to be included below in the fixed antenna location constants i.e. the first 2 parameters in the function below
             distance_data = Haversine_distance(40.43742, -86.90778, decimal_latitude_val, decimal_longitude_val)
             # This means that a satellite exists, hence packet loss might raise concerns about Starlink connectivity issues provided data collection is not corrupted
             if distance_data <= distance_from_antenna:
