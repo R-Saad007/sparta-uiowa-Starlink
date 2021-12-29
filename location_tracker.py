@@ -108,20 +108,30 @@ def file_parser():
 
 # Initializing a counter variable to count the number of packet losses, due to absense of satellites (genuine packet losses)
 genuine_packet_loss = 0
+# Initializing a counter variable to count the number of packet losses, due to presence of satellites (Faults)
+fault_packet_loss = 0
 # Initializing a boolean variable to keep track of genuine packet losses
 check = True
+# List to store all satellites's data (satellite name, latitude, longitude, Height, Epoch)
+satellite_data_list = []
+# List to store the names of certain satellites after the distance calculations have been performed using the Haversine formula
+satellite_name_list = []
+# List to store the particular distance values of each satellite from the antenna
+distance_list = []
 # Changing antenna location according to a x meter shift in all 4 directions (N,S,E,W)
-antenna_shift_distance  = 500000
+antenna_shift_distance1 = 500000  # For N,S
+antenna_shift_distance2 = 500000  # For E,W
 # Radius of the earth
 radius_earth = 6378.137
 # 1 meter in degree
 m = (1 / ((2 * pi / 360) * radius_earth)) / 1000
-North = 40.43742 + (antenna_shift_distance * m)
-South = 40.43742 - (antenna_shift_distance * m)
-East = -86.90778 + (antenna_shift_distance * m) / cos(-86.90778 * (pi / 180))
-West = -86.90778 - (antenna_shift_distance * m) / cos(-86.90778 * (pi / 180))
-# Checking whether a satellite is within a distance x from the antenna where distx is the variable to be changed
-distx = input("Enter the distance for satellite tracking: ")
+North = 40.43742 + (antenna_shift_distance1 * m)
+South = 40.43742 - (antenna_shift_distance1 * m)
+East = -86.90778 + (antenna_shift_distance2 * m) / cos(-86.90778 * (pi / 180))
+West = -86.90778 - (antenna_shift_distance2 * m) / cos(-86.90778 * (pi / 180))
+# Checking whether a satellite is within a distance x km from the antenna where distx is the variable to be changed
+#distx = input("Enter the distance for satellite tracking: ")
+distx = 100
 distance_from_antenna = int(distx)
 # Calling the parser function from the ping_parser file
 data_list = file_parser()
@@ -133,12 +143,6 @@ for x in range(len(data_list)):
     # Here we can set the timescale value of our choice
     ts = load.timescale()
     t_data = ts.utc(int(temp_data[0]), month=int(temp_data[1]), day=int(temp_data[2]), hour=int(temp_data[3]), minute=int(temp_data[4]), second=int(temp_data[5]))
-    # List to store all satellites's data (satellite name, latitude, longitude, Height, Epoch)
-    satellite_data_list = []
-    # List to store the names of certain satellites after the distance calculations have been performed using the Haversine formula
-    satellite_name_list = []
-    # List to store the particular distance values of each satellite from the antenna
-    distance_list = []
     # Retrieving data for all satellites
     # Input for the distance from the antenna for which satellites are to be found
     '''
@@ -164,11 +168,11 @@ for x in range(len(data_list)):
             decimal_latitude_val = parser(latitude_val)
             decimal_longitude_val = parser(longitude_val)
             # Distance of the satellite from the antenna using Haversine formula
-            # The variables North, South, East, and West are to be included below in the fixed antenna location constants i.e. the first 2 parameters in the function below
-            distance_data = Haversine_distance(40.43742, -86.90778, decimal_latitude_val, decimal_longitude_val)
+            distance_data = Haversine_distance(South, East, decimal_latitude_val, decimal_longitude_val)
             # This means that a satellite exists, hence packet loss might raise concerns about Starlink connectivity issues provided data collection is not corrupted
             if distance_data <= distance_from_antenna:
                 check = False
+                fault_packet_loss += 1
                 satellite_name_list.append(satellite_name)
                 distance_list.append(distance_data)
         else:
@@ -182,7 +186,8 @@ for x in range(len(data_list)):
 
 print(f"Number of satellites at a distance of {distance_from_antenna}km from the antenna:", len(satellite_name_list))
 print("Number of genuine packet losses:", genuine_packet_loss)
-accuracy = (genuine_packet_loss/(genuine_packet_loss + len(satellite_name_list)))*100
+print("Number of faulty packet losses:", fault_packet_loss)
+accuracy = (genuine_packet_loss/(genuine_packet_loss + fault_packet_loss))*100
 print("Percentage disconnections/packet losses related to absense of satellites:",accuracy)
 print("Execution Time: " + "{:.4f}".format((time.time() - start_time)) + "seconds")
 
