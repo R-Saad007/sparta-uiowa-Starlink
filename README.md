@@ -5,3 +5,4 @@
 - Code for number of satellites present within a certain distance from the antenna with respect to time
 - Contains code for calculating the percentage disconnections due to packet losses
 - location_tracker.py has been updated, and contains the variables North, South, East, and West to be used as arguments for the Haversine distance formula calculator
+- Contains the packet loss percentage data for a 10x10 grid relative to true antenna location
