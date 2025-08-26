@@ -103,7 +103,7 @@ python location_tracker.py --north 42.5 --south 41.5 --east -90.0 --west -92.0
 
 The security analysis will output packet loss percentages across a configurable grid pattern, demonstrating how communication patterns could potentially reveal antenna locations.
 
-![Alt text]("C:\Users\Hp\OneDrive\Pictures\Screenshots\Screenshot 2025-08-26 083130.png" "Packet Loss Percentages 10x10 Grid")
+![Alt text]("Packet Loss Percentages 10x10 Grid.png" "Packet Loss Percentages 10x10 Grid")
 
 ## Research Dataset
 
